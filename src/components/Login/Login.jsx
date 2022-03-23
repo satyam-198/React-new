@@ -1,29 +1,65 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import Utils from '../Utils/Utils'
 
-const Login = () => {
+const Login = ({ token, setToken, valid, setValid }) => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	// const [valid, setValid] = useState(false)
+
+	const routeHistory = useNavigate()
+	// const { token, setToken } = Utils.useTokenState()
+
+	// const { token, setToken } = Utils.useTokenState()
+
+	// useEffect(() => {
+	// 	if (Utils.checkTokenValidity(token, setToken)) {
+	// 		console.log('Already logged in!')
+	// 		// return (
+	// 		// 	<Navigate
+	// 		// 		to={{
+	// 		// 			pathname: '/',
+	// 		// 		}}
+	// 		// 	/>
+	// 		// )
+	// 		setValid(true)
+	// 	}
+	// }, [token, setToken])
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 
 		const data = {
-			email: email,
-			password: password,
+			usr: email,
+			pwd: password,
 		}
 
+		const url = `${process.env.REACT_APP_BACKEND_URL}/login`
+
+		console.log(url)
+
 		axios
-			.post('http://localhost:8000/login', data)
+			.post(url, data)
 			.then((res) => {
-				console.log(res)
+				localStorage.setItem('token', res.data.token)
+				setToken(res.data.token)
+				console.log(token)
+				setValid(true)
+				routeHistory('/')
 			})
 			.catch((err) => {
 				console.log(err)
 			})
 	}
 
-	return (
+	return valid ? (
+		<Navigate
+			to={{
+				pathname: '/',
+			}}
+		/>
+	) : (
 		<form onSubmit={(event) => handleSubmit(event)}>
 			<h3>Login</h3>
 
