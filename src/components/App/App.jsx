@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Route, Routes, Redirect } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
-import Utils from '../Utils/Utils'
 import Home from '../Home/Home'
 import Nav from '../Nav/Nav'
 import Login from '../Login/Login'
@@ -12,6 +11,7 @@ import Login from '../Login/Login'
 const App = () => {
 	const [token, setToken] = useState(null)
 	const [valid, setValid] = useState(false)
+	const routeHistory = useNavigate()
 
 	useEffect(() => {
 		const token_val = localStorage.getItem('token')
@@ -35,48 +35,33 @@ const App = () => {
 					console.log(err)
 				})
 		}
-		// if (Utils.checkTokenValidity()) {
-		//     console.log("valid")
-		// }
 	}, [])
 
+	const globals = {
+		token,
+		setToken,
+		valid,
+		setValid,
+		routeHistory,
+	}
+
 	return (
-		// <Utils.GlobalContextProvider>
 		<div className='App'>
 			<Nav />
 			<div className='auth-wrapper'>
 				<div className='auth-inner'>
 					<Routes>
-						<Route
-							exact
-							path='/'
-							element={
-								<Home
-									token={token}
-									setToken={setToken}
-									valid={valid}
-									setValid={setValid}
-								/>
-							}
-						/>
+						<Route exact path='/' element={<Home {...globals} />} />
 						<Route
 							exact
 							path='/login'
-							element={
-								<Login
-									token={token}
-									setToken={setToken}
-									valid={valid}
-									setValid={setValid}
-								/>
-							}
+							element={<Login {...globals} />}
 						/>
 						{/* <Route exact path="/register" component={Register} /> */}
 					</Routes>
 				</div>
 			</div>
 		</div>
-		// </Utils.GlobalContextProvider>
 	)
 }
 

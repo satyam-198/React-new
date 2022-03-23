@@ -1,31 +1,12 @@
 import axios from 'axios'
-import { Navigate, useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import Utils from '../Utils/Utils'
+import { Navigate } from 'react-router-dom'
+import { useState } from 'react'
 
-const Login = ({ token, setToken, valid, setValid }) => {
+const Login = (props) => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	// const [valid, setValid] = useState(false)
 
-	const routeHistory = useNavigate()
-	// const { token, setToken } = Utils.useTokenState()
-
-	// const { token, setToken } = Utils.useTokenState()
-
-	// useEffect(() => {
-	// 	if (Utils.checkTokenValidity(token, setToken)) {
-	// 		console.log('Already logged in!')
-	// 		// return (
-	// 		// 	<Navigate
-	// 		// 		to={{
-	// 		// 			pathname: '/',
-	// 		// 		}}
-	// 		// 	/>
-	// 		// )
-	// 		setValid(true)
-	// 	}
-	// }, [token, setToken])
+	const { setToken, valid, setValid, routeHistory } = props
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
@@ -44,7 +25,6 @@ const Login = ({ token, setToken, valid, setValid }) => {
 			.then((res) => {
 				localStorage.setItem('token', res.data.token)
 				setToken(res.data.token)
-				console.log(token)
 				setValid(true)
 				routeHistory('/')
 			})

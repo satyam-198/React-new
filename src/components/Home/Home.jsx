@@ -1,18 +1,25 @@
 // import axios from 'axios'
-import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
-// import Utils from '../Utils/Utils'
 
-const Home = ({ token, setToken, valid, setValid }) => {
-	// const { token, setToken } = Utils.useTokenState()
-	// useEffect(() => {
-	//     if (!Utils.checkTokenValidity(token, setToken)) {
-	// 		setValid(false)
-	// 	}
-	// }, [token, setToken])
+const Home = (props) => {
+	const { setToken, valid, setValid, routeHistory } = props
+
+	const logoutHandler = () => {
+		localStorage.removeItem('token')
+		setValid(false)
+		setToken(null)
+		routeHistory('/login')
+	}
 
 	return valid ? (
-		<h2>You are logged in!</h2>
+		<>
+			<h2>You are logged in!</h2>
+			<button
+				className='btn btn-primary btn-block'
+				onClick={logoutHandler}>
+				Log out
+			</button>
+		</>
 	) : (
 		<Navigate
 			to={{
